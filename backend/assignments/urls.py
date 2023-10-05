@@ -1,8 +1,10 @@
 from django.urls import re_path
 from rest_framework.routers import DefaultRouter
 
-from .views import AssignmentViewSet
+from .views import EmailViewSet, MailBoxViewSet, TemplateViewSet
 
 router = DefaultRouter()
-router.register(r"assignments", AssignmentViewSet, basename="assignments")
+router.register(r"email", EmailViewSet, basename="email")
+router.register(r"mailbox", MailBoxViewSet, basename="mailbox")
+router.register(r"template", TemplateViewSet, basename="template")
 assignments_urlpatterns = router.urls
