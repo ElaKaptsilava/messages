@@ -12,8 +12,14 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 
+import environ
+
+env = environ.Env(DEBUG=(bool, False))
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+environ.Env.read_env()
 
 
 # Quick-start development settings - unsuitable for production
@@ -149,3 +155,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CELERY_BROKER_URL = os.environ.get("BROKER_URL", "redis://localhost:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("RESULT_BACKEND", "redis://localhost:6379/0")
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = env('EMAIL_HOST')
+EMAIL_HOST_PASSWORD = env('EMAIL_PASSWORD')
+DEFAULT_FROM_EMAIL = 'mzvt yteh seai velj'
