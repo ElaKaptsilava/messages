@@ -42,7 +42,7 @@ class MailBoxViewSet(viewsets.ModelViewSet):
 class EmailViewSet(viewsets.ModelViewSet):
     serializer_class = EmailSerializer
     queryset = Email.objects.all()
-    filter_backends = (DjangoFilterBackend, )
+    filter_backends = [DjangoFilterBackend]
     filterset_class = EmailFilterSet
 
 
