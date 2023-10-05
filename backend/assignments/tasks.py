@@ -1,6 +1,6 @@
 from celery import shared_task
 
-from assignments.models import Assignment
+from .models import Assignment
 
 
 @shared_task()
