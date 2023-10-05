@@ -1,12 +1,11 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.exceptions import APIException
-from rest_framework.response import Response
 
 from .serializers import *
 from rest_framework import viewsets
 from django.db import transaction
-from .task import sending_email
+from .tasks import sending_email
 import django_filters
 
 

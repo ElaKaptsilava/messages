@@ -17,5 +17,4 @@ class MailBoxSerializer(serializers.ModelSerializer):
 class EmailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Email
-        read_only_fields = ("id", "sent_date")
         fields = '__all__'
