@@ -1,10 +1,21 @@
+from .models import *
 from rest_framework import serializers
 
-from .models import Assignment
 
-
-class AssignmentSerializer(serializers.ModelSerializer):
+class TemplateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Assignment
-        read_only_fields = ("id", "sum")
-        fields = ("id", "first_term", "second_term", "sum")
+        model = Template
+        fields = '__all__'
+
+
+class MailBoxSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Mailbox
+        fields = '__all__'
+
+
+class EmailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Email
+        read_only_fields = ("id", "sent_date")
+        fields = '__all__'
