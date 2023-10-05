@@ -1,27 +1,58 @@
-from django.db import transaction
-
-from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.decorators import action
 from rest_framework.exceptions import APIException
+from rest_framework.response import Response
 
-from .models import Assignment
-from .serializers import AssignmentSerializer
-from .tasks import task_execute
+from .serializers import *
+from rest_framework import viewsets
+from django.db import transaction
+from .task import sending_email
+import django_filters
 
 
-class AssignmentViewSet(viewsets.ModelViewSet):
+class EmailFilterSet(django_filters.FilterSet):
+    date = django_filters.DateFilter(field_name='date', lookup_expr='gt')
 
-    serializer_class = AssignmentSerializer
-    queryset = Assignment.objects.all()
+    class Meta:
+        model = Email
+        fields = ['date']
+
+
+class TemplateViewSet(viewsets.ModelViewSet):
+    serializer_class = TemplateSerializer
+    queryset = Template.objects.all()
+
+    def get_object(self):
+        template = super().get_object()
+        template.last_update = timezone.now()
+        template.save()
+        return template
+
+
+class MailBoxViewSet(viewsets.ModelViewSet):
+    serializer_class = MailBoxSerializer
+    queryset = Mailbox.objects.all()
+
+    def get_object(self):
+        mailbox = super().get_object()
+        mailbox.last_update = timezone.now()
+        mailbox.save()
+        return mailbox
+
+
+class EmailViewSet(viewsets.ModelViewSet):
+    serializer_class = EmailSerializer
+    queryset = Email.objects.all()
+    filter_backends = (DjangoFilterBackend, )
+    filterset_class = EmailFilterSet
+
 
     def perform_create(self, serializer):
         try:
             with transaction.atomic():
                 instance = serializer.save()
                 instance.save()
-
-                job_params = {"db_id": instance.id}
-
-                transaction.on_commit(lambda: task_execute.delay(job_params))
-
-        except Exception as e:
-            raise APIException(str(e))
+                params = {'db_id': instance.id}
+                transaction.on_commit(lambda: sending_email.delay(params))
+        except Exception as ex:
+            raise APIException(str(ex))
