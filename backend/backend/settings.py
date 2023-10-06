@@ -81,9 +81,9 @@ TEMPLATES = [
 ]
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10,
 }
-
-WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -151,7 +151,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CELERY_BROKER_URL = os.environ.get("BROKER_URL", "redis://localhost:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("RESULT_BACKEND", "redis://localhost:6379/0")
 
-EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
+CELERY_EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+
+CELERY_EMAIL_TASK_CONFIG = {
+    'queue': 'django_email',
+    'delivery_mode': 1,
+    'rate_limit': '50/m',
+}
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
