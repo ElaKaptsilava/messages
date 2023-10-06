@@ -1,20 +1,24 @@
 from celery import shared_task
-from django.core import mail
+from django.core.mail import get_connection, EmailMessage
 from django.utils import timezone
+import os
 
-from .models import Email
+from .models import Email, Mailbox
 
 
 @shared_task()
 def sending_email(params):
     email = Email.objects.get(id=params['db_id'])
-    with mail.get_connection():
-        mail.EmailMessage(
+    mailbox = Mailbox.objects.get(id=email.mailbox.id)
+    backend_connection = get_connection(host=mailbox.host, port=mailbox.port,
+                                        username=mailbox.login, password=os.environ.get("PASSWORD", mailbox.password),
+                                        use_ssl=mailbox.use_ssl)
+    with backend_connection:
+        EmailMessage(
             subject=email.template.subject, body=email.template.text,
             from_email=email.mailbox.email_form, to=email.to,
             cc=email.cc, bcc=email.bcc, reply_to=[email.reply_to],
-            attachments=email.template.attachment,
+            attachments=email.template.attachment, connection=backend_connection
         ).send()
         email.sent_date = timezone.now()
         email.save()
-    return 'Done'
