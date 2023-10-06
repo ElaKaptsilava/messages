@@ -1,28 +1,17 @@
-from .models import *
 from celery import shared_task
-from django.core.mail import send_mail
-from backend import settings
+from django.core import mail
+from django.utils import timezone
+
+from .models import Email
 
 
 @shared_task()
 def sending_email(params):
     email = Email.objects.get(id=params['db_id'])
-
-    if len(email.to) > 0:
-        send_mail(
-            subject=email.template.subject,
-            message=email.template.text,
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=email.to + email.cc,
-            fail_silently=True
-        )
-        if len(email.bcc) > 0:
-            send_mail(
-                subject=email.template.subject,
-                message=email.template.text.join('\n There is no need to reply to the message.'),
-                from_email=settings.EMAIL_HOST_USER,
-                recipient_list=email.bcc,
-                fail_silently=True
-            )
+    emails = (
+        (email.template.subject, email.template.text, email.reply_to, email.to),
+        (email.template.subject, email.template.text.join('\nCopy'), email.reply_to, email.cc),
+    )
+    result = mail.send_mass_mail(emails)
     email.sent_date = timezone.now()
     email.save()
