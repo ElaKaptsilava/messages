@@ -10,7 +10,8 @@ import django_filters
 
 
 class EmailFilterSet(django_filters.FilterSet):
-    date = django_filters.DateFilter(field_name='date', lookup_expr='gt')
+    date__gt = django_filters.DateFilter(field_name='date', lookup_expr='gt')
+    date__lte = django_filters.DateFilter(field_name='date', lookup_expr='lte')
 
     class Meta:
         model = Email

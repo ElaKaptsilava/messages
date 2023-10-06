@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
-
 import environ
 
 env = environ.Env(DEBUG=(bool, False))
@@ -97,7 +96,7 @@ DB_POSTGRESQL = "postgresql"
 DATABASES_ALL = {
     DB_SQLITE: {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": os.path.join(BASE_DIR, 'db.sqlite3'),
     },
     DB_POSTGRESQL: {
         "ENGINE": "django.db.backends.postgresql",
@@ -146,7 +145,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "/django_static/"
-STATIC_ROOT = BASE_DIR / "django_static"
+STATIC_ROOT = os.path.join(BASE_DIR, 'db.sqlite3')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
