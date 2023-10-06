@@ -1,8 +1,10 @@
+from django.db import models
+from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.decorators import action
 from rest_framework.exceptions import APIException
 
-from .serializers import *
+from .models import Email, Template, Mailbox
+from .serializers import TemplateSerializer, EmailSerializer, MailBoxSerializer
 from rest_framework import viewsets
 from django.db import transaction
 from .tasks import sending_email
@@ -10,12 +12,15 @@ import django_filters
 
 
 class EmailFilterSet(django_filters.FilterSet):
-    date__gt = django_filters.DateFilter(field_name='date', lookup_expr='gt')
-    date__lte = django_filters.DateFilter(field_name='date', lookup_expr='lte')
-
     class Meta:
         model = Email
-        fields = ['date']
+        fields = {'date': ['gt', 'lte', 'contains'],
+                  'sent_date': ['gt', 'lte', 'contains']}
+        filter_overrides = {
+            models.DateTimeField: {
+                'filter_class': django_filters.DateFilter,
+            }
+        }
 
 
 class TemplateViewSet(viewsets.ModelViewSet):
@@ -45,7 +50,6 @@ class EmailViewSet(viewsets.ModelViewSet):
     queryset = Email.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_class = EmailFilterSet
-
 
     def perform_create(self, serializer):
         try:

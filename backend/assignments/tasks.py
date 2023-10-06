@@ -16,8 +16,6 @@ def sending_email(params):
             recipient_list=email.to + email.cc,
             fail_silently=True
         )
-        print('Send copy to bcc')
-
         if len(email.bcc) > 0:
             send_mail(
                 subject=email.template.subject,
@@ -26,6 +24,5 @@ def sending_email(params):
                 recipient_list=email.bcc,
                 fail_silently=True
             )
-            print('Send copy to bcc')
     email.sent_date = timezone.now()
     email.save()
