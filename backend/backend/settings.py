@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'djcelery_email',
+    'rest_framework_swagger',
     'assignments',
 ]
 

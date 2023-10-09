@@ -5,6 +5,7 @@ markdown~=3.4.4
 django-filter~=23.3
 django-environ
 django-celery-email
+django-rest-swagger
 
 celery[redis]~=5.3.4
 

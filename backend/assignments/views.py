@@ -57,6 +57,7 @@ class EmailViewSet(viewsets.ModelViewSet):
                 instance = serializer.save()
                 instance.save()
                 params = {'db_id': instance.id}
-                transaction.on_commit(lambda: sending_email.delay(params))
+                if instance.is_active:
+                    transaction.on_commit(lambda: sending_email.delay(params))
         except Exception as ex:
             raise APIException(str(ex))
