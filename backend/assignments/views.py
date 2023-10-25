@@ -8,7 +8,8 @@ from .serializers import TemplateSerializer, EmailSerializer, MailBoxSerializer
 from rest_framework import viewsets
 from django.db import transaction
 from .tasks import sending_email
-import django_filters, logging
+import django_filters
+import logging
 
 
 class EmailFilterSet(django_filters.FilterSet):

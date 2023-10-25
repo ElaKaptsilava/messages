@@ -7,7 +7,6 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('assignments', '0001_initial'),
     ]
@@ -17,9 +16,15 @@ class Migration(migrations.Migration):
             name='Email',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('to', django.contrib.postgres.fields.ArrayField(base_field=models.EmailField(max_length=70), default=list, size=5)),
-                ('cc', django.contrib.postgres.fields.ArrayField(base_field=models.EmailField(max_length=70), blank=True, default=list, size=None)),
-                ('bcc', django.contrib.postgres.fields.ArrayField(base_field=models.EmailField(max_length=70), blank=True, default=list, size=None)),
+                ('to',
+                 django.contrib.postgres.fields.ArrayField(base_field=models.EmailField(max_length=70), default=list,
+                                                           size=5)),
+                ('cc',
+                 django.contrib.postgres.fields.ArrayField(base_field=models.EmailField(max_length=70), blank=True,
+                                                           default=list, size=None)),
+                ('bcc',
+                 django.contrib.postgres.fields.ArrayField(base_field=models.EmailField(max_length=70), blank=True,
+                                                           default=list, size=None)),
                 ('reply_to', models.EmailField(blank=True, default=None, max_length=70)),
                 ('sent_date', models.DateTimeField(blank=True, null=True)),
                 ('date', models.DateTimeField(default=django.utils.timezone.now)),
