@@ -8,7 +8,7 @@ from .serializers import TemplateSerializer, EmailSerializer, MailBoxSerializer
 from rest_framework import viewsets
 from django.db import transaction
 from .tasks import sending_email
-import django_filters
+import django_filters, logging
 
 
 class EmailFilterSet(django_filters.FilterSet):
@@ -48,6 +48,7 @@ class MailBoxViewSet(viewsets.ModelViewSet):
 class EmailViewSet(viewsets.ModelViewSet):
     serializer_class = EmailSerializer
     queryset = Email.objects.all()
+    http_method_names = ['get', 'post']
     filter_backends = [DjangoFilterBackend]
     filterset_class = EmailFilterSet
 
@@ -57,7 +58,10 @@ class EmailViewSet(viewsets.ModelViewSet):
                 instance = serializer.save()
                 instance.save()
                 params = {'db_id': instance.id}
-                if instance.is_active:
+                if instance.mailbox.is_active:
                     transaction.on_commit(lambda: sending_email.delay(params))
         except Exception as ex:
+            logging.basicConfig(filename=r'C:\Users\Lizaveta\send_messages\backend\assignments\logs\email.log',
+                                format='%(asctime)s: %(message)s',
+                                level=logging.ERROR, datefmt='%H:%M:%S')
             raise APIException(str(ex))

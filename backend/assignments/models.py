@@ -15,8 +15,10 @@ class Mailbox(models.Model):
     last_update = models.DateTimeField(default=timezone.now)
 
     @property
-    def sent(self):
-        return
+    def sent_count(self):
+        email = Email.objects.filter(mailbox=self.pk, sent_date__is_null=False)
+        return len(email)
+
 
 class Template(models.Model):
     subject = models.CharField(max_length=50)

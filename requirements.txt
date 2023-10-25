@@ -9,7 +9,7 @@ drf-spectacular
 celery[redis]~=5.3.4
 
 psycopg2-binary
-pip~=23.2.1
+pip~=23.3
 wheel~=0.41.2
 amqp~=5.1.1
 vine~=5.0.0

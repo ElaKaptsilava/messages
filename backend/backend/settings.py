@@ -87,7 +87,6 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -167,32 +166,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = env("EMAIL_HOST")
 EMAIL_HOST_PASSWORD = 'uvte flgx zzap sccn'
 EMAIL_PORT = 587
-
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "verbose": {
-            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
-            "style": "{",
-        },
-    },
-    "handlers": {
-        "file": {
-            "level": "ERROR",
-            "class": "logging.FileHandler",
-            "formatter": "verbose",
-            'filename': r'C:\Users\Lizaveta\send_messages\backend\assignments\logs\email.log'
-        },
-    },
-    "loggers": {
-        "django.request": {
-            "handlers": ["file"],
-            "level": 'ERROR',
-            'propagate': True
-        },
-    },
-}
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'API',
